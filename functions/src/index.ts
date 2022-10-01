@@ -45,7 +45,7 @@ const RESPONSE_DELETE_SUCCESS = "Successfully deleted 😶‍🌫️!";
  * ------------------------- CONFIG AND INITIALIZATION -------------------------
  * -----------------------------------------------------------------------------
  */
-const app = express();
+export const app = express();
 // admin.initializeApp();
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const serviceAccount = require("../serviceAccountCredentials.json");
@@ -217,6 +217,28 @@ app.delete("/deleteItem/:item_id", async (req, res) => {
     }
 });
 
+
+/**
+ * Delete all items in the database
+ * @return  Ok message
+ */
+app.delete("/deleteAllItems", async (req, res) => {
+    try {
+        // Get all items from "items" and delete
+        db.collection("items").listDocuments().then((doc) => {
+            doc.map((item) => {
+                // Delete item
+                item.delete();
+            });
+        });
+
+        // ✅ RETURN OK response
+        return res.status(200).json({res: RESPONSE_DELETE_SUCCESS});
+    } catch (error) {
+        // ❌ RETURN ERROR response
+        return res.status(500).json({res: RESPONSE_ERROR, error});
+    }
+});
 
 /**
  * GET - The 404 Route
