@@ -45,8 +45,13 @@ const RESPONSE_DELETE_SUCCESS = "Successfully deleted 😶‍🌫️!";
  * ------------------------- CONFIG AND INITIALIZATION -------------------------
  * -----------------------------------------------------------------------------
  */
-admin.initializeApp();
 const app = express();
+// admin.initializeApp();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const serviceAccount = require("../serviceAccountCredentials.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
 const db = admin.firestore();
 
 /**
