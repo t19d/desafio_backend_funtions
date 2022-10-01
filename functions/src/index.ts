@@ -122,7 +122,7 @@ app.get("/getItem/:item_id", async (req, res) => {
         const response = snapshot.data();
 
         // ⚠️ RETURN 404 if ID doesn't exist
-        if (!response) return res.status(404).send({res: RESPONSE_ITEM_NOT_FOUND, id: req.params.item_id});
+        if (!response) return res.status(400).send({res: RESPONSE_ITEM_NOT_FOUND, id: req.params.item_id});
 
         // ✅ RETURN OK response
         return res.status(200).send(response);
@@ -187,6 +187,11 @@ app.put("/updateItem/:item_id", async (req, res) => {
 
         // Get item from "items"
         const itemRef = db.collection("items").doc(req.params.item_id);
+
+        // ⚠️ RETURN 404 if ID doesn't exist
+        const snapshot = await itemRef.get();
+        if (!snapshot.data()) return res.status(400).send({res: RESPONSE_ITEM_NOT_FOUND, id: req.params.item_id});
+
         // Update item
         await itemRef.update({...updatedItem});
 
@@ -208,6 +213,10 @@ app.delete("/deleteItem/:item_id", async (req, res) => {
     try {
         // Get item from "items"
         const itemRef = db.collection("items").doc(req.params.item_id);
+
+        // ⚠️ RETURN 404 if ID doesn't exist
+        const snapshot = await itemRef.get();
+        if (!snapshot.data()) return res.status(400).send({res: RESPONSE_ITEM_NOT_FOUND, id: req.params.item_id});
 
         // Delete item
         await itemRef.delete();
