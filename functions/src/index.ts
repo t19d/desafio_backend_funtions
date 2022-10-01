@@ -2,6 +2,7 @@
 import * as functions from "firebase-functions";
 import * as express from "express";
 import * as admin from "firebase-admin";
+import * as bodyParser from "body-parser";
 
 /**
  * -----------------------------------------------------------------------------
@@ -46,6 +47,8 @@ const RESPONSE_DELETE_SUCCESS = "Successfully deleted 😶‍🌫️!";
  * -----------------------------------------------------------------------------
  */
 export const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 // admin.initializeApp();
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const serviceAccount = require("../serviceAccountCredentials.json");
